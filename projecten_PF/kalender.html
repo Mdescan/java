@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>JS PF project: kalender</title>
+<link rel="stylesheet" href="kalender.css" type="text/css" />
+<style media="screen" type="text/css">
+<!--
+noscript div {
+	color:red;
+}
+
+#kalender{
+	background-color:#69F;
+	padding:1em;
+	overflow:auto;
+	}
+div.maandContainer{
+		height:170px;
+		float:left;
+	}
+-->
+</style>
+<script type="text/javascript" src="nuttig_lib.js"></script>
+</head>
+<body>
+<h1>JS PF project: JS Kalender</h1>
+<div id="kalender">
+    
+</div>
+<script type="text/javascript">
+window.onload = function (){
+// DOM elementen
+var divOutput = document.getElementById('output');
+var divKalender = document.getElementById('kalender');
+
+//plaatst huidige datum-tijd in output element
+divKalender.innerHTML = maakJaarKalender(huidigJaar);
+//dagen aanduiden
+var verjaardag = new Date(huidigJaar, 3, 21);
+dagAanduiden(vandaag,'vandaag');
+dagAanduiden(verjaardag,'verjaardag');
+}
+</script>
+</body>
+</html>
