@@ -73,67 +73,65 @@ ul.fouten li{
             }
         },
         aantal:{
-            msg: "getal verwacht",
-            test: function(elem){
-                //aantal test enkel de inhoud als getal als er een inhoud is
-                if(elem.value != ""){
-                    return !isNaN(elem.value) && elem.value>0;
-                }else{
-                    return true;
+                msg: "getal verwacht",
+                test: function(elem){
+                    //aantal test enkel de inhoud als getal als er een inhoud is 
+                    if(elem.value != ""){
+                        return !isNaN(elem.value) && elem.value>0;
+                    }else{return true;}
                 }
-            }
-        },
-        datum:{
-            msg: "datum ongeldig (d/m/yyyy)",
-            test: function(elem){
-                //dd/mm/yyyy
-                var re_datum = /^([1-9]|[0,1,2][1-9]|3[0,1])\/(1[0,1,2]|[0][1-9]|[1-9])\/\d{4}$/;
-                if(elem.value != ""){
-                    return re_datum.test(elem.value);
-                }else{
-                    return true;
+            },
+            datum:{
+                msg: "datum ongeldig (d/m/yyyy)",
+                test: function(elem){
+                    // dd/mm/yyyy
+                    var re_datum = /^([1-9]|[0,1,2][1-9]|3[0,1])\/([\d]|1[0,1,2])\/\d{4}$/;
+                    if(elem.value != ""){
+                        return re_datum.test(elem.value);
+                    }else{
+                        return true;
+                    }
                 }
-            }
-        },
-        aankomstL:{
-            msg: "aankomstluchthaven moet verschillen van vertrekluchthaven",
-            test: function (elem){
-                //CUSTOM TEST: aankomstLuchthaven moet verschillen van vertrekluchthaven
-                if(elem.value != ""){
-                    var aL = elem.value; //aankomstluchthaven
-                    var vL = document.frmVlucht.vertrekL.value; //vertrekLuchthaven
-                    return !(aL==vL);
-                }else{ 
-                    return true;
+            },
+            aankomstL:{
+                msg: "aankomstluchthaven moet verschillen van vertrekluchthaven",
+                test: function (elem){
+                    //CUSTOM TEST: aankomstLuchthaven moet verschillen van vertrekluchthaven
+                    if(elem.value != ""){
+                        var aL = elem.value; //aankomstluchthaven
+                        var vL = document.frmVlucht.vertrekL.value; //vertrekLuchthaven
+                        return !(aL==vL);
+                    }else{
+                        return true;
+                    }
                 }
-            }
-        },
-        retourDatum:{
+            },
+            retourDatum:{
             msg:"retourdatum &gt; vertrekdatum",
-            test: function (elem){
-                /* CUSTOM TEST: retourdatum minstens 1 dag na vertrekdatum
-                * 1 dag later = 86400000 ms
-                * beide formaten dd/mm/yyyy
-                */
-                if(elem.value != ""){
-                    var aD = elem.value; //aankomstdatum
-                    var vD = document.frmVlucht.vertrekdatum.value; //vertrekdatum
-                    var dag = 86400000; //dag in ms
-                    //retourdatum
-                    var arrD1 = aD.split('/');
-                    var D1 = new Date(parseInt(arrD1[2]),parseInt(arrD1[1])-1, parseInt(arrD1[0]));
-                    //vertrekdatum
-                    var arrD2 = vD.split('/');
-                    var D2 = new Date(parseInt(arrD2[2]),parseInt(arrD2[1])-1, parseInt(arrD2[0]));
-                    var verschil = D1-D2;
-                    return (verschil>=dag);
-                }else{
-                    return true;
+                test: function (elem){
+                    /* CUSTOM TEST: retourdatum minstens 1 dag na vertrekdatum
+                    * 1 dag later = 86400000 ms
+                    * beide formaten dd/mm/yyyy
+                    */
+                    if(elem.value != ""){
+                        var aD = elem.value; //aankomstdatum
+                        var vD = document.frmVlucht.vertrekdatum.value; //vertrekdatum
+                        var dag = 86400000; //dag in ms
+                        //retourdatum
+                        var arrD1 = aD.split('/');
+                        var D1 = new Date(parseInt(arrD1[2]),parseInt(arrD1[1])-1, parseInt(arrD1[0]));
+                        //vertrekdatum
+                        var arrD2 = vD.split('/');
+                        var D2 = new Date(parseInt(arrD2[2]),parseInt(arrD2[1])-1, parseInt(arrD2[0]));
+                        var verschil = D1-D2;
+                        return (verschil>=dag);
+                    }else{
+                        return true;
+                    }
                 }
             }
-        }
-    }
-
+    };
+    
     window.onload = function (){
         //DOM referenties
         var eFrmVlucht = document.frmVlucht;
@@ -146,10 +144,8 @@ ul.fouten li{
         eFrmVlucht.addEventListener('submit', function (e){
             e.preventDefault();
             var bValid = valideer(this);
-            console.log('formulier '+ this.name +' valideert '+ bValid);
-            if(bValid === true){
-                this.submit();
-            }
+            console.log('formulier ' + this.name +' valideert ' + bValid);
+            if(bValid===true) this.submit();
         });
         eRetour.addEventListener('click', function(){ //radio retour
             vluchtType(this.value);
@@ -157,24 +153,18 @@ ul.fouten li{
         eEnkel.addEventListener('click', function(){ //radio enkel
             vluchtType(this.value);
         });
-        
-        eVolw.addEventListener('blur',passagierNamen);
-        eKind.addEventListener('blur',passagierNamen);
-        ePeut.addEventListener('blur',passagierNamen);
-    }//einde window onload
-
-    function valideer(frm){//valideer functie voor form elements
+    }// einde window load
+    
+    function valideer(frm){
         var bValid = true; //optimistisch geen fouten
         //lus doorheen alle form elementen van het formulier
-        for(var i=0;i<frm.elements.length;i++){
-            //verwijder vorige foutboodschappen
+        for(var i = 0; i < frm.elements.length; i++) {
+            //verwijder vorige foutboodschappen 
             hideErrors(frm.elements[i]);
             //valideer veld
             var bVeld = valideerVeld(frm.elements[i]);
-            console.log("het element %s met name %s valideert %s",frm.elements[i].nodeName,frm.elements[i].name, bVeld);
-            if(bVeld ===false){
-                bValid = false; 
-            }
+            console.log("het element %s met name %s valideert %s", frm.elements[i].nodeName,frm.elements[i].name, bVeld);
+            if(bVeld ===false){ bValid = false; }
         }
         return bValid;
     }
@@ -187,7 +177,7 @@ ul.fouten li{
             // fouten class aanwezig?
             if(re.test(elem.className)){
                 var bTest = oFouten[fout].test(elem);
-                console.log("het element %s met name %s wordt gevalideerd voor %s: %s",elem.nodeName,elem.name, fout, bTest);
+                console.log("het element %s met name %s wordt gevalideerd voor %s: %s", elem.nodeName,elem.name, fout, bTest);
                 if(bTest === false){
                     aFoutBoodschappen.push(oFouten[fout].msg);
                 }
@@ -244,53 +234,13 @@ ul.fouten li{
             eRetourDatum.disabled = true;
             eRetourDatum.style.display = "none";//verberg label
             eLabelRetourdatum.style.display = "none";//verberg label
-        }
-        else{
+        }else{
             eRetourDatum.disabled = false;
             var sClass = eRetourDatum.className + " required";
             eRetourDatum.className = sClass;
             eRetourDatum.style.display = "inline";
             eLabelRetourdatum.style.display = "inline";
         }
-    }
-    
-    function passagierNamen(){
-        /*
-        * controleert dynamisch het aantal passagiernamen
-        * passagier 1 blijft steeds bestaan
-        * veronderstelt de aanwezigheid van een SPAN#EXTRAS
-        */
-        //aantallen velden
-        var eVolw = document.frmVlucht.volwassenen;
-        var eKind = document.frmVlucht.kinderen;
-        var ePeut = document.frmVlucht.peuters;
-        var eExtras = document.getElementById('extras');
-        if(!valideerVeld(eVolw)||!valideerVeld(eKind)||!valideerVeld(ePeut)){
-            return;
-        }
-        //getalwaarden
-        var nVolw = parseInt(eVolw.value); //ook required
-        var nKind = (eKind.value=="")?0:parseInt(eKind.value);
-        var nPeut = (ePeut.value=="")?0:parseInt(ePeut.value);
-        var nPassagiers = nVolw + nKind + nPeut;
-        var sInhoud = "";
-        for(var i=0;i<nPassagiers-1;i++){
-            sInhoud += maakPassagier(i+2);
-        }
-        eExtras.innerHTML = sInhoud;
-    }
-    function maakPassagier(i){
-        /*
-        * maakt een label en een passagiernaamveld
-        *@i integer
-        *@return string HTML
-        */
-        var str = "";
-        str += "<label for=\"passagier"+i+"\">Passagier "+i+":</label>\n";
-        str += "<input type=\"text\" name=\"passagier"+i+"\" id=\"passagier"+i+"\" ";
-        str += "title=\"voornaam en famlilienaam van de passagier\" class=\"extra_p text required\" />\n";
-        str += "<br />\n"
-        return str;
     }
 </script>
 <h1>JS PF project: een formulier valideren</h1>
@@ -451,7 +401,7 @@ ul.fouten li{
     <input type="text" name="vertrekdatum" id="vertrekdatum" size="10"  title="de vertrekdatum (dd/mm/yyyy)"  class="text required datum" />
     <br />
     <label for="aankomstL">naar:</label>
-    <select name="aankomstL" id="aankomstL" title="kies de luchthaven waar naartoe u vliegt" class="required aankomstL">
+    <select name="aankomstL" id="aankomstL" title="kies de luchthaven waar naartoe u vliegt" class="">
       <option value="" selected="selected">Kies aankomst luchthaven</option>
       <option value="aAAR">Aarhus (AAR) </option>
       <option value="aABZ">Aberdeen (ABZ) </option>
@@ -583,12 +533,12 @@ ul.fouten li{
     </select>
     <br />
     <label for="retourdatum" id="labelRetourdatum">datum retour:</label>
-    <input type="text" name="retourdatum" id="retourdatum" size="10"  title="de datum van terugkeer (dd/mm/yyyy)" class="text required datum retourDatum" />
+    <input type="text" name="retourdatum" id="retourdatum" size="10"  title="de datum van terugkeer (dd/mm/yyyy)" class="text datum required retourDatum" />
   </fieldset>
   <fieldset id="passagiers">
     <legend>Passagiers</legend>
     <label for="volwassenen">Volwassenen:</label>
-    <input type="text" name="volwassenen" id="volwassenen" title="vul het aantal volwassenen in"  class="number required aantal" />
+    <input type="text" name="volwassenen" id="volwassenen" title="vul het aantal volwassenen in"  class="number aantal" />
     <br />
     <label for="kinderen">Kinderen:</label>
     <input type="text" name="kinderen" id="kinderen" title="vul het aantal kinderen in"  class="number aantal" />
@@ -597,7 +547,7 @@ ul.fouten li{
     <input type="text" name="peuters" id="peuters" title="vul het aantal peuters in"  class="number aantal" />
     <br />
     <label for="passagier1">Passagier 1:</label>
-    <input type="text" name="passagier1" id="passagier1" title="voornaam en famlilienaam van de passagier"  class="text required" />
+    <input type="text" name="passagier1" id="passagier1" title="voornaam en famlilienaam van de passagier"  class="text" />
     <br />
     <span id="extras"></span>
   </fieldset>
