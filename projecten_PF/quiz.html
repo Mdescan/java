@@ -72,7 +72,7 @@ p.score {
 	color: #FF0051;
 }
 </style>
-<script src="json2.js"></script>
+
 <script src="quiz.json" type="text/javascript"></script>
 <script>
     //==========GLOBALS ETC==================================================
@@ -86,6 +86,7 @@ p.score {
     //==========window onload==================================================
     window.onload = function(){
         oQuiz = JSON.parse(jsonQuiz);
+        console.log(oQuiz[0]);
         oQuiz.score = [];
         
         console.log(oQuiz.vragen[0].vraag);

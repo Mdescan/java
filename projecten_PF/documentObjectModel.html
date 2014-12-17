@@ -21,10 +21,19 @@ img{
         /* wijzig de tekst van het tweede list item */
         var eBolletjes = document.getElementsByTagName('li');
         var nAantal = eBolletjes.length;
-        var e2deItem = eBolletjes[0]; //tweede item
-        e2deItem.removeChild(e2deItem.childNodes[0]);
-        var sTekst = document.createTextNode('C#');
-        e2deItem.appendChild(sTekst);
+        var e2deItem = eBolletjes[2]; //tweede item
+        
+        //e2deItem.removeChild(e2deItem.childNodes[0]);
+        //var sTekst = document.createTextNode('c#');
+        var ListItem = document.createElement("li");
+        var ListText = document.createTextNode('c++');
+        
+        ListItem.appendChild(ListText);
+        
+        var parent = e2deItem.parentNode;
+        
+        parent.replaceChild(ListItem, e2deItem);
+        //e2deItem.appendChild(sTekst);
         
         var eLijst = document.getElementsByTagName('ul')[0];
         var eItem = document.createElement('li');
